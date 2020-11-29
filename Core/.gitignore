@@ -1,7 +1,7 @@
 
 Makefile
 Makefile.in
-.h.in
+*.h.in
 
 /.Config/
 /.M4/InitAutoMake.m4
