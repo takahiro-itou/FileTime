@@ -7,9 +7,6 @@ Makefile.in
 /.M4/InitAutoMake.m4
 /References/
 /aclocal.m4
-/autom4te.cache
+/autom4te.cache/
 /configure
-
-Lib/*/Tests/CMakeLists.txt
-Lib/*/Tests/Makefile.am
 
