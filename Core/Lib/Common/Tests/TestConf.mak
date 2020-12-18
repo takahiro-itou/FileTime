@@ -5,6 +5,7 @@
 
 EXTRATESTS              =
 TESTS                   =  \
+        ErrorDetectionCodeTest  \
         FileTimeSettingsTest    \
         FileTimeTypesTest       \
         ${EXTRATESTS}
@@ -31,6 +32,7 @@ TEST_LDFLAGS_COMMON         +=
 ##    Test Programs.
 ##
 
+ErrorDetectionCodeTest_SOURCES  =  ErrorDetectionCodeTest.cpp
 FileTimeSettingsTest_SOURCES    =  FileTimeSettingsTest.cpp
 FileTimeTypesTest_SOURCES       =  FileTimeTypesTest.cpp
 
