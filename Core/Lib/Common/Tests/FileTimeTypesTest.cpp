@@ -57,6 +57,9 @@ void  FileTimeTypesTest::testNameSpace()
     ErrCode     retErr  = ERR_SUCCESS;
     Boolean     bFlags  = BOOL_TRUE;
 
+    (void)(retErr);
+    (void)(bFlags);
+
     return;
 }
 

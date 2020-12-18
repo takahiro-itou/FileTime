@@ -19,7 +19,7 @@
 **/
 
 #if !defined( FILETIME_COMMON_INCLUDED_FILE_TIME_TYPES_H )
-#    define   FILETIME_COMMON_INCLUDED_FILE_TIME_SETTINGS_H
+#    define   FILETIME_COMMON_INCLUDED_FILE_TIME_TYPES_H
 
 #include    "FileTimeSettings.h"
 
