@@ -5,6 +5,8 @@
 
 EXTRATESTS              =
 TESTS                   =  \
+        FileTimeSettingsTest    \
+        FileTimeTypesTest       \
         ${EXTRATESTS}
 ##
 ##    Test Configurations.
@@ -28,4 +30,7 @@ TEST_LDFLAGS_COMMON         +=
 ##
 ##    Test Programs.
 ##
+
+FileTimeSettingsTest_SOURCES    =  FileTimeSettingsTest.cpp
+FileTimeTypesTest_SOURCES       =  FileTimeTypesTest.cpp
 
