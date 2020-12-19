@@ -76,6 +76,49 @@ ErrorDetectionCode::~ErrorDetectionCode()
 //    Public Member Functions.
 //
 
+//----------------------------------------------------------------
+//    ハッシュ値の計算バッファを初期化する。
+//
+
+ErrCode
+ErrorDetectionCode::initializeHash()
+{
+    return ( ERR_FAILURE );
+}
+
+//----------------------------------------------------------------
+//    ハッシュ値の計算バッファを更新する。
+//
+
+ErrCode
+ErrorDetectionCode::updateHash(
+        const  LpcReadBuf   inBuf,
+        const  FileLength   cbBuf)
+{
+    return ( ERR_FAILURE );
+}
+
+//----------------------------------------------------------------
+//    ハッシュ値の計算を完了する。
+//
+
+ErrorDetectionCode::EDCode
+ErrorDetectionCode::finalizeHash()
+{
+    return ( getHashValue() );
+}
+
+//----------------------------------------------------------------
+//    計算したハッシュ値を取得する。
+//
+
+ErrorDetectionCode::EDCode
+ErrorDetectionCode::getHashValue()  const
+{
+    EDCode  out;
+    return ( out );
+}
+
 //========================================================================
 //
 //    Protected Member Functions.
