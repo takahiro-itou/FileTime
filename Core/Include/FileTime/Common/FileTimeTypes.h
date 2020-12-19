@@ -101,6 +101,12 @@ typedef     unsigned char       BtByte;
 
 typedef     const  BtByte  *    LpcByte;
 
+/**
+**    バイト型の読み書き両用バッファ。
+**/
+
+typedef     BtByte  *           LpByte;
+
 //========================================================================
 //
 //    安全なポインタ型のキャスト。
