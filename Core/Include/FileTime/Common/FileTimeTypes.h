@@ -23,6 +23,8 @@
 
 #include    "FileTimeSettings.h"
 
+#include    <stddef.h>
+
 
 FILETIME_NAMESPACE_BEGIN
 
@@ -64,6 +66,27 @@ enum  Boolean
     BOOL_FALSE  = 0,        /**<  偽。  **/
     BOOL_TRUE   = 1         /**<  真。  **/
 };
+
+//----------------------------------------------------------------
+/**
+**    ファイルの長さを表す型。
+**/
+
+typedef     size_t              FileLength;
+
+//----------------------------------------------------------------
+/**
+**    読み取り専用バッファ。
+**/
+
+typedef     const  void  *      LpcReadBuf;
+
+//----------------------------------------------------------------
+/**
+**    読み書き両用バッファ。
+**/
+
+typedef     void  *             LpWriteBuf;
 
 FILETIME_NAMESPACE_END
 
