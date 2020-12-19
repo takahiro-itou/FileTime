@@ -34,7 +34,7 @@ FILETIME_NAMESPACE_BEGIN
 class  FileTimeTypesTest : public  TestFixture
 {
     CPPUNIT_TEST_SUITE(FileTimeTypesTest);
-    CPPUNIT_TEST(testNameSpace);
+    CPPUNIT_TEST(testTypes);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -42,23 +42,31 @@ public:
     virtual  void   tearDown()  override    { }
 
 private:
-    void  testNameSpace();
+    void  testTypes();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( FileTimeTypesTest );
+
+#define     FILETIME_HELP_UNUSED_VARIABLE(v)    (void)(v)
 
 //========================================================================
 //
 //    Tests.
 //
 
-void  FileTimeTypesTest::testNameSpace()
+void  FileTimeTypesTest::testTypes()
 {
     ErrCode     retErr  = ERR_SUCCESS;
     Boolean     bFlags  = BOOL_TRUE;
+    FileLength  cbSize  = 0;
+    LpcReadBuf  lpRead  = nullptr;
+    LpWriteBuf  lpWrite = nullptr;
 
-    (void)(retErr);
-    (void)(bFlags);
+    FILETIME_HELP_UNUSED_VARIABLE(retErr);
+    FILETIME_HELP_UNUSED_VARIABLE(bFlags);
+    FILETIME_HELP_UNUSED_VARIABLE(cbSize);
+    FILETIME_HELP_UNUSED_VARIABLE(lpRead);
+    FILETIME_HELP_UNUSED_VARIABLE(lpWrite);
 
     return;
 }
