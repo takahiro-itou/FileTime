@@ -88,6 +88,36 @@ typedef     const  void  *      LpcReadBuf;
 
 typedef     void  *             LpWriteBuf;
 
+//----------------------------------------------------------------
+/**
+**    バイト型。
+**/
+
+typedef     unsigned char       BtByte;
+
+/**
+**    バイト型の読み取り専用バッファ。
+**/
+
+typedef     const  BtByte  *    LpcByte;
+
+//========================================================================
+//
+//    安全なポインタ型のキャスト。
+//
+
+template  <typename  T>
+T  pointer_cast(void  *  p)
+{
+    return ( static_cast<T>(p) );
+}
+
+template  <typename  T>
+T  pointer_cast(const  void  *  p)
+{
+    return ( static_cast<T>(p) );
+}
+
 FILETIME_NAMESPACE_END
 
 #endif
