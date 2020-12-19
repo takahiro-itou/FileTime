@@ -54,6 +54,18 @@ public:
         EDWordType  words[4];
     };
 
+private:
+
+    typedef     uint64_t        LengthType;
+
+    /**   計算用バッファの型。  **/
+    struct  ContextRegister
+    {
+        EDWordType  regs[4];
+        LengthType  numByte;
+        BtByte      buffer[64];
+    };
+
 //========================================================================
 //
 //    Constructor(s) and Destructor.
@@ -122,8 +134,8 @@ public:
     **/
     ErrCode
     updateHash(
-            const  LpcReadBuf   inBuf,
-            const  FileLength   cbBuf);
+            const   LpcReadBuf  inBuf,
+            const   FileLength  cbBuf);
 
     //----------------------------------------------------------------
     /**   ハッシュ値の計算を完了する。
@@ -157,11 +169,32 @@ public:
 //
 //    For Internal Use Only.
 //
+private:
+
+    //----------------------------------------------------------------
+    /**   指定した 16 ワードブロックを処理する。
+    **
+    **  @param [in]     inBuf
+    **  @param [in,out] regs
+    **  @return     void.
+    **/
+    static  inline  void
+    processBlock(
+            const   LpcReadBuf  inBuf,
+            EDWordType          regs[4]);
+
+    enum  {
+        BLOCK_BYTES = 64
+    };
 
 //========================================================================
 //
 //    Member Variables.
 //
+private:
+
+    /**   計算用バッファ。  **/
+    ContextRegister     m_context;
 
 //========================================================================
 //
