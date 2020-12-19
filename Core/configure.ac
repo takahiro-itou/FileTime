@@ -48,8 +48,11 @@ dnl
 : ${CFLAGS:='-O0  -g  -D_DEBUG'}
 : ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
 
-CFLAGS="${CFLAGS}  -std=c++11  -Wall"
-CXXFLAGS="${CXXFLAGS}  -std=c++11  -Wall  -Weffc++"
+m4_include([.M4/CheckExtraFlags.m4])
+
+EXTRA_COMPILER_OPTIONS="-std=c++11  -Wall"
+CFLAGS="${CFLAGS}  ${EXTRA_COMPILER_OPTIONS}"
+CXXFLAGS="${CXXFLAGS}  ${EXTRA_COMPILER_OPTIONS}  -Weffc++"
 
 dnl
 dnl   Project Name Space.
@@ -79,7 +82,6 @@ dnl
 dnl   Check Programs.
 dnl
 
-AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_AS
@@ -112,6 +114,14 @@ m4_include([.M4/WithExtLibs.m4])
 MYAC_WITH_EXT_LIB(
     [CPPUNIT],  [cppunit],  [Path to cppunit],  [yes],
     [AMCNF_CPPUNIT_ENABLED])
+
+dnl----------------------------------------------------------------
+dnl
+dnl   Linker Scripts.
+dnl   リンカスクリプトを生成する。
+dnl
+
+m4_include([.M4/LinkerScripts.m4])
 
 dnl----------------------------------------------------------------
 dnl
