@@ -58,6 +58,8 @@ private:
 
     typedef     uint64_t        LengthType;
 
+    typedef     BtByte          BufferType[64];
+
     /**   計算用バッファの型。  **/
     struct  ContextRegister
     {
@@ -180,7 +182,7 @@ private:
     **/
     static  inline  void
     processBlock(
-            const   LpcReadBuf  inBuf,
+            const   LpcByte     inBuf,
             EDWordType          regs[4]);
 
     enum  {
