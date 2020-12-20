@@ -21,6 +21,11 @@
 #include    "TestDriver.h"
 #include    "FileTime/Common/ErrorDetectionCode.h"
 
+#include    <cmath>
+#include    <iomanip>
+#include    <iostream>
+
+
 FILETIME_NAMESPACE_BEGIN
 namespace  Common  {
 
@@ -46,6 +51,9 @@ class  ErrorDetectionCodeTest : public  TestFixture
     CPPUNIT_TEST(testHashValue5);
     CPPUNIT_TEST(testHashValue6);
     CPPUNIT_TEST(testHashValue7);
+
+    CPPUNIT_TEST(testSinTable);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -65,6 +73,8 @@ private:
     void  testHashValue5();
     void  testHashValue6();
     void  testHashValue7();
+
+    void  testSinTable();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ErrorDetectionCodeTest );
@@ -271,6 +281,22 @@ void  ErrorDetectionCodeTest::testHashValue7()
     CPPUNIT_ASSERT_EQUAL(0x7AB60721U, out.words[3]);
 
     return;
+}
+
+void  ErrorDetectionCodeTest::testSinTable()
+{
+    for ( int i = 1; i <= 64; ++ i ) {
+        if ( (i & 3) == 1 ) {
+            std::cout   <<  std::endl;
+        }
+        uint32_t  x = static_cast<uint32_t>(
+                            fabs( std::sin(static_cast<double>(i)) )
+                        * 4294967296);
+        std::cout   <<  std::hex        <<  "0x"
+                    <<  std::setw(8)    <<  std::setfill('0')
+                    <<  x   <<  ',';
+    }
+    std::cout   <<  std::endl;
 }
 
 }   //  End of namespace  Common
