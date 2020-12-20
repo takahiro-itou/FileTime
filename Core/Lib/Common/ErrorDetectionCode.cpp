@@ -315,25 +315,25 @@ ErrorDetectionCode::processBlock(
     ROUND3(b, c, d, a, x,  2, 23, 0xC4AC5665);
 
     //  ROUND4  //
-    ROUND3(a, b, c, d, x,  0,  6, 0xF4292244);
-    ROUND3(d, a, b, c, x,  7, 10, 0x432AFF97);
-    ROUND3(c, d, a, b, x, 14, 15, 0xAB9423A7);
-    ROUND3(b, c, d, a, x,  5, 21, 0xFC93A039);
+    ROUND4(a, b, c, d, x,  0,  6, 0xF4292244);
+    ROUND4(d, a, b, c, x,  7, 10, 0x432AFF97);
+    ROUND4(c, d, a, b, x, 14, 15, 0xAB9423A7);
+    ROUND4(b, c, d, a, x,  5, 21, 0xFC93A039);
 
-    ROUND3(a, b, c, d, x, 12,  6, 0x655B59C3);
-    ROUND3(d, a, b, c, x,  3, 10, 0x8F0CCC92);
-    ROUND3(c, d, a, b, x, 10, 15, 0xFFEFF47D);
-    ROUND3(b, c, d, a, x,  1, 21, 0x85845DD1);
+    ROUND4(a, b, c, d, x, 12,  6, 0x655B59C3);
+    ROUND4(d, a, b, c, x,  3, 10, 0x8F0CCC92);
+    ROUND4(c, d, a, b, x, 10, 15, 0xFFEFF47D);
+    ROUND4(b, c, d, a, x,  1, 21, 0x85845DD1);
 
-    ROUND3(a, b, c, d, x,  8,  6, 0x6FA87E4F);
-    ROUND3(d, a, b, c, x, 15, 10, 0xFE2CE6E0);
-    ROUND3(c, d, a, b, x,  6, 15, 0xA3014314);
-    ROUND3(b, c, d, a, x, 13, 21, 0x4E0811A1);
+    ROUND4(a, b, c, d, x,  8,  6, 0x6FA87E4F);
+    ROUND4(d, a, b, c, x, 15, 10, 0xFE2CE6E0);
+    ROUND4(c, d, a, b, x,  6, 15, 0xA3014314);
+    ROUND4(b, c, d, a, x, 13, 21, 0x4E0811A1);
 
-    ROUND3(a, b, c, d, x,  4,  6, 0xF7537E82);
-    ROUND3(d, a, b, c, x, 11, 10, 0xBD3AF235);
-    ROUND3(c, d, a, b, x,  2, 15, 0x2AD7D2BB);
-    ROUND3(b, c, d, a, x,  9, 21, 0xEB86D391);
+    ROUND4(a, b, c, d, x,  4,  6, 0xF7537E82);
+    ROUND4(d, a, b, c, x, 11, 10, 0xBD3AF235);
+    ROUND4(c, d, a, b, x,  2, 15, 0x2AD7D2BB);
+    ROUND4(b, c, d, a, x,  9, 21, 0xEB86D391);
 
     regs[0] += a;
     regs[1] += b;
