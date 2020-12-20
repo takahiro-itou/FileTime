@@ -24,7 +24,9 @@
 #include    <cmath>
 #include    <iomanip>
 #include    <iostream>
-
+#include    <memory.h>
+#include    <sstream>
+#include    <vector>
 
 FILETIME_NAMESPACE_BEGIN
 namespace  Common  {
@@ -285,18 +287,39 @@ void  ErrorDetectionCodeTest::testHashValue7()
 
 void  ErrorDetectionCodeTest::testSinTable()
 {
+    ErrorDetectionCode  testee;
+    ErrorDetectionCode::EDCode  out;
+
+    std::stringstream   ss;
     for ( int i = 1; i <= 64; ++ i ) {
-        if ( (i & 3) == 1 ) {
-            std::cout   <<  std::endl;
-        }
         uint32_t  x = static_cast<uint32_t>(
                             fabs( std::sin(static_cast<double>(i)) )
                         * 4294967296);
-        std::cout   <<  std::hex        <<  "0x"
-                    <<  std::setw(8)    <<  std::setfill('0')
-                    <<  x   <<  ',';
+        ss  <<  std::hex        <<  "0x"
+            <<  std::setw(8)    <<  std::setfill('0')
+            <<  x   <<  ',';
+        if ( (i & 3) == 0 ) {
+            ss  <<  std::endl;
+        }
     }
-    std::cout   <<  std::endl;
+
+    std::vector<char>   buffer;
+    const   FileLength  len = ss.str().size();
+    buffer.resize(len + 1);
+
+    char  *  const      buf = &(buffer[0]);
+    memcpy(buf, ss.str().c_str(), len);
+    buf[len]    = '\0';
+
+    CPPUNIT_ASSERT_EQUAL(ERR_SUCCESS, testee.initializeHash());
+    CPPUNIT_ASSERT_EQUAL(
+            ERR_SUCCESS, testee.updateHash(buf, len));
+    out = testee.finalizeHash();
+
+    CPPUNIT_ASSERT_EQUAL(0x40422051U, out.words[0]);
+    CPPUNIT_ASSERT_EQUAL(0xF60E5BB3U, out.words[1]);
+    CPPUNIT_ASSERT_EQUAL(0x5D28EF2AU, out.words[2]);
+    CPPUNIT_ASSERT_EQUAL(0x8BD2D7B4U, out.words[3]);
 }
 
 }   //  End of namespace  Common
