@@ -18,13 +18,15 @@
 **      @file       Bin/FileTimeTools.cpp
 **/
 
-#include    "FileTime/Common/FileTimeSettings.h"
+#include    "FileTime/Common/FileTimeTypes.h"
 
 #include    <iostream>
 #include    <getopt.h>
 
 #include    <string>
 #include    <vector>
+
+#include    <windows.h>
 
 using   namespace   FILETIME_NAMESPACE;
 
@@ -34,6 +36,47 @@ struct AppOpts {
     std::string     tmStamp;
     StringArray     targetFiles;
 };
+
+struct TimeStamps {
+    FILETIME    ftCreationTime;
+    FILETIME    ftLastAccessTime;
+    FILETIME    ftLastWriteTime;
+};
+
+//----------------------------------------------------------------
+/**   指定したファイルのタイムスタンプを取得する。
+**
+**/
+
+ErrCode
+getReferenceFileTime(
+        const std::string & fileName,
+        TimeStamps        & timeStamps)
+{
+    HANDLE  hFile;
+
+    hFile = ::CreateFile(
+                fileName.c_str(), GENERIC_READ, 0, NULL,
+                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if ( hFile == INVALID_HANDLE_VALUE ) {
+        std::cerr   <<  "Cannot access to " <<  fileName
+                    <<  ": No such file or directory"   <<  std::endl;
+        return ( ERR_FILE_OPEN_ERROR );
+    }
+
+    ::GetFileTime(
+            hFile,
+            &(timeStamps.ftCreationTime),
+            &(timeStamps.ftLastAccessTime),
+            &(timeStamps.ftLastWriteTime));
+
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+/**   エントリポイント。
+**
+**/
 
 int  main(int argc, char * argv[])
 {
