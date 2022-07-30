@@ -37,12 +37,43 @@ struct AppOpts {
     StringArray     targetFiles;
 };
 
-struct TimeStampInfo {
-    FILETIME    ftCreationTime;
-    FILETIME    ftLastAccessTime;
-    FILETIME    ftLastWriteTime;
+struct TimeInfo {
+    FILETIME    utcFile;
+    FILETIME    localFile;
+    SYSTEMTIME  utcSys;
+    SYSTEMTIME  localSys;
 };
 
+struct TimeStampInfo {
+    TimeInfo    creationTime;
+    TimeInfo    lastAccessTime;
+    TimeInfo    lastWriteTime;
+};
+
+
+//----------------------------------------------------------------
+
+ErrCode
+fillTimeInfoFromUtcFileTime(
+        TimeInfo &  timeInfo)
+{
+    ::FileTimeToLocalFileTime(&(timeInfo.utcFile), &(timeInfo.localFile));
+    ::FileTimeToSystemTime(&(timeInfo.utcFile), &(timeInfo.utcSys));
+    ::FileTimeToSystemTime(&(timeInfo.localFile), &(timeInfo.localSys));
+
+    return ( ERR_SUCCESS );
+}
+
+ErrCode
+fillTimeInfoFromLocalSystemTime(
+        TimeInfo &  timeInfo)
+{
+    ::SystemTimeToFileTime(&(timeInfo.localSys), &(timeInfo.localFile));
+    ::LocalFileTimeToFileTime(&(timeInfo.localFile), &(timeInfo.utcFile));
+    ::FileTimeToSystemTime(&(timeInfo.utcFile), &(timeInfo.utcSys));
+
+    return ( ERR_SUCCESS );
+}
 
 //----------------------------------------------------------------
 /**   現在時刻を取得する。
@@ -53,13 +84,17 @@ ErrCode
 getCurrentTime(
         TimeStampInfo   & timeStamp)
 {
-    SYSTEMTIME  localTime;
+    SYSTEMTIME  systemTime;
 
-    ::GetLocalTime(&localTime);
+    ::GetLocalTime(&systemTime);
 
-    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftCreationTime));
-    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftLastAccessTime));
-    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftLastWriteTime));
+    timeStamp.creationTime.localSys     = systemTime;
+    timeStamp.lastAccessTime.localSys   = systemTime;
+    timeStamp.lastWriteTime.localSys    = systemTime;
+
+    fillTimeInfoFromLocalSystemTime(timeStamp.creationTime);
+    fillTimeInfoFromLocalSystemTime(timeStamp.lastAccessTime);
+    fillTimeInfoFromLocalSystemTime(timeStamp.lastWriteTime);
 
     return ( ERR_SUCCESS );
 }
@@ -87,12 +122,17 @@ getReferenceFileTime(
 
     if ( ! ::GetFileTime(
                     hFile,
-                    &(timeStamp.ftCreationTime),
-                    &(timeStamp.ftLastAccessTime),
-                    &(timeStamp.ftLastWriteTime))
+                    &(timeStamp.creationTime.utcFile),
+                    &(timeStamp.lastAccessTime.utcFile),
+                    &(timeStamp.lastWriteTime.utcFile))
     ) {
         return ( ERR_FILE_IO_ERROR );
     }
+
+    //  UTC SYSTEM
+    fillTimeInfoFromUtcFileTime(timeStamp.creationTime);
+    fillTimeInfoFromUtcFileTime(timeStamp.lastAccessTime);
+    fillTimeInfoFromUtcFileTime(timeStamp.lastWriteTime);
 
     return ( ERR_SUCCESS );
 }
@@ -121,9 +161,9 @@ setTargetFileTime(
 
     if ( ! ::SetFileTime(
                     hFile,
-                    &(timeStamp.ftCreationTime),
-                    &(timeStamp.ftLastAccessTime),
-                    &(timeStamp.ftLastWriteTime))
+                    &(timeStamp.creationTime.utcFile),
+                    &(timeStamp.lastAccessTime.utcFile),
+                    &(timeStamp.lastWriteTime.utcFile))
     ) {
         return ( ERR_FILE_IO_ERROR );
     }
@@ -131,6 +171,54 @@ setTargetFileTime(
     return ( ERR_SUCCESS );
 }
 
+//----------------------------------------------------------------
+/**   時刻情報を表示する。
+**
+**/
+
+std::ostream  &
+showTimeInfo(
+        const FILETIME *    lpFileTime,
+        const SYSTEMTIME *  lpSystemTime,
+        std::ostream &      outStr)
+{
+    char    buf[1024];
+    const char *    week[7] = {
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    };
+
+    snprintf(
+            buf, sizeof(buf),
+            "%04d/%02d/%02d (%s) %02d:%02d:%02d.%d [%08x%08x]",
+            lpSystemTime->wYear,
+            lpSystemTime->wMonth,
+            lpSystemTime->wDay,
+            week[lpSystemTime->wDayOfWeek],
+            lpSystemTime->wHour,
+            lpSystemTime->wMinute,
+            lpSystemTime->wSecond,
+            lpSystemTime->wMilliseconds,
+            lpFileTime->dwHighDateTime,
+            lpFileTime->dwLowDateTime);
+
+    return ( outStr << buf );
+}
+
+std::ostream  &
+showTimeInfo(
+        const TimeInfo  & timeInfo,
+        std::ostream    & outStr)
+{
+    outStr  <<  "LOC:";
+    showTimeInfo(
+            &(timeInfo.localFile), &(timeInfo.localSys), outStr);
+    outStr  <<  ", UTC:";
+    showTimeInfo(
+            &(timeInfo.utcFile), &(timeInfo.utcSys), outStr);
+    return ( outStr );
+}
+
+//----------------------------------------------------------------
 //----------------------------------------------------------------
 /**   エントリポイント。
 **
@@ -185,7 +273,6 @@ int  main(int argc, char * argv[])
     std::cerr   <<  "Targets:"  <<  std::endl;
     for ( size_t i = 0; i < appOpts.targetFiles.size(); ++ i ) {
         const  std::string  & fnTarget  = appOpts.targetFiles[i];
-        std::cerr   <<  fnTarget    <<  std::endl;
         setTargetFileTime(fnTarget, timeStamp);
     }
 
