@@ -150,6 +150,87 @@ getReferenceFileTime(
 }
 
 //----------------------------------------------------------------
+/**   指定した文字列をタイムスタンプに変換する。
+**
+**/
+
+ErrCode
+getFileTimeFromString(
+        const std::string & textTime,
+        TimeStampInfo     & timeStamp)
+{
+    const   size_t  len = textTime.length();
+    std::vector<int>    work(len);
+    size_t  posSec  = len;
+
+    for ( size_t i = 0; i < len; ++ i ) {
+        const char c = textTime[i];
+        if ( c == '.') {
+            posSec  = i;
+            continue;
+        }
+        if ( ('0' <= c) && (c <= '9') ) {
+            work[i] = c - '0';
+        }
+        return ( ERR_FAILURE );
+    }
+
+    if ( (posSec != len) && (posSec != len - 3) ) {
+        //  秒数部分の指定（桁数）が不正。
+        return ( ERR_FAILURE );
+    }
+    if ( posSec < 8 ) {
+        //  指定した文字列の桁数が不正。
+        return ( ERR_FAILURE );
+    }
+    const int * ptrBase = nullptr;
+
+    //  年を省略した場合は今の値をそのまま使うのでコピーしておく
+    SYSTEMTIME  localTime = timeStamp.lastWriteTime.localSys;
+
+    if ( posSec == 8 ) {
+        //  MMDDhhmm
+        ptrBase = &(work[0]);
+    } else if ( posSec == 10 ) {
+        //  YYMMDDhhmm
+        ptrBase = &(work[2]);
+        const WORD cc = localTime.wYear / 100;
+        localTime.wYear = (cc * 100 + work[0] * 10 + work[1]);
+    } else if ( posSec == 12 ) {
+        //  CCYYMMDDhhmm
+        ptrBase = &(work[4]);
+        localTime.wYear = (
+                work[0] * 1000 + work[1] * 100 + work[2] * 10 + work[3]
+        );
+    }
+    if ( ptrBase == nullptr ) {
+        return ( ERR_FAILURE );
+    }
+
+    localTime.wMonth    = ptrBase[0] * 10 + ptrBase[1];
+    localTime.wDay      = ptrBase[2] * 10 + ptrBase[3];
+    localTime.wHour     = ptrBase[4] * 10 + ptrBase[5];
+    localTime.wMinute   = ptrBase[6] * 10 + ptrBase[7];
+
+    if ( posSec == len - 3 ) {
+        localTime.wSecond   = work[posSec+1] * 10 + work[posSec+2];
+    } else {
+        localTime.wSecond   = 0;
+    }
+    localTime.wMilliseconds = 0;
+
+    timeStamp.creationTime.localSys     = localTime;
+    timeStamp.lastAccessTime.localSys   = localTime;
+    timeStamp.lastWriteTime.localSys    = localTime;
+
+    fillTimeInfoFromLocalSystemTime(timeStamp.creationTime);
+    fillTimeInfoFromLocalSystemTime(timeStamp.lastAccessTime);
+    fillTimeInfoFromLocalSystemTime(timeStamp.lastWriteTime);
+
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
 /**   指定したファイルのタイムスタンプを設定する。
 **
 **/
@@ -157,7 +238,8 @@ getReferenceFileTime(
 ErrCode
 setTargetFileTime(
         const  std::string    & fileName,
-        const  TimeStampInfo  & timeStamp)
+        const  TimeStampInfo  & timeStamp,
+        const  AppOpts        & appOpts)
 {
     BOOL    ret;
     HANDLE  hFile;
@@ -172,9 +254,14 @@ setTargetFileTime(
         return ( ERR_FILE_OPEN_ERROR );
     }
 
+    const FILETIME * lpCreation = &(timeStamp.creationTime.utcFile);
+    if ( ! appOpts.overwriteCreation ) {
+        lpCreation  = NULL;
+    }
+
     ret = ::SetFileTime(
                 hFile,
-                &(timeStamp.creationTime.utcFile),
+                lpCreation,
                 &(timeStamp.lastAccessTime.utcFile),
                 &(timeStamp.lastWriteTime.utcFile));
     ::CloseHandle(hFile);
@@ -258,8 +345,9 @@ showTimeStamp(
 int  main(int argc, char * argv[])
 {
     AppOpts appOpts;
-    int c;
-    int option_index = 0;
+    int     c;
+    ErrCode retErr;
+    int     option_index = 0;
 
     static struct option long_options[] = {
         { "reference", required_argument, 0, 'r' },
@@ -302,12 +390,26 @@ int  main(int argc, char * argv[])
     getCurrentTime(timeStamp);
     if ( ! appOpts.refFile.empty() ) {
         getReferenceFileTime(appOpts.refFile, timeStamp);
+        std::cerr   <<  "# INFO : Reference Time :" <<  std::endl;
+        showTimeStamp(timeStamp, std::cerr);
+    }
+    if ( ! appOpts.tmStamp.empty() ) {
+        retErr  = getFileTimeFromString(appOpts.tmStamp, timeStamp);
+        if ( retErr != ERR_SUCCESS ) {
+            std::cerr   <<  "Invalid date format."  <<  std::endl;
+            return  ( 1 );
+        }
+        std::cerr   <<  "# INFO : Specified Time :" <<  std::endl;
         showTimeStamp(timeStamp, std::cerr);
     }
 
     //  作成日時を最終更新日時に設定する
     if ( appOpts.overwriteCreation ) {
         timeStamp.creationTime  = timeStamp.lastWriteTime;
+    } else {
+        timeStamp.creationTime.utcFile.dwLowDateTime    = 0;
+        timeStamp.creationTime.utcFile.dwHighDateTime   = 0;
+        fillTimeInfoFromLocalSystemTime(timeStamp.creationTime);
     }
 
     //  指定したファイル群のタイムスタンプを設定する。  //
@@ -317,7 +419,7 @@ int  main(int argc, char * argv[])
         std::cout   <<  "Setting time of "  <<  fnTarget
                     <<  " to "  <<  std::endl;
         showTimeStamp(timeStamp, std::cout);
-        setTargetFileTime(fnTarget, timeStamp);
+        setTargetFileTime(fnTarget, timeStamp, appOpts);
 
         TimeStampInfo   updatedStamp;
         getReferenceFileTime(fnTarget, updatedStamp);
