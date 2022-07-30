@@ -64,11 +64,48 @@ getReferenceFileTime(
         return ( ERR_FILE_OPEN_ERROR );
     }
 
-    ::GetFileTime(
-            hFile,
-            &(timeStamps.ftCreationTime),
-            &(timeStamps.ftLastAccessTime),
-            &(timeStamps.ftLastWriteTime));
+    if ( ! ::GetFileTime(
+                    hFile,
+                    &(timeStamps.ftCreationTime),
+                    &(timeStamps.ftLastAccessTime),
+                    &(timeStamps.ftLastWriteTime))
+    ) {
+        return ( ERR_FILE_IO_ERROR );
+    }
+
+    return ( ERR_SUCCESS );
+}
+
+//----------------------------------------------------------------
+/**   指定したファイルのタイムスタンプを設定する。
+**
+**/
+
+ErrCode
+setTargetFileTime(
+        const std::string & fileName,
+        const TimeStamps  & timeStamps)
+{
+    HANDLE  hFile;
+
+    hFile = ::CreateFile(
+                fileName.c_str(), GENERIC_WRITE, 0, NULL,
+                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if ( hFile == INVALID_HANDLE_VALUE ) {
+        std::cerr   <<  "Cannot access to " <<  fileName
+                    <<  std::endl;
+        return ( ERR_FILE_OPEN_ERROR );
+    }
+
+    if ( ! ::SetFileTime(
+                    hFile,
+                    &(timeStamps.ftCreationTime),
+                    &(timeStamps.ftLastAccessTime),
+                    &(timeStamps.ftLastWriteTime))
+    ) {
+        return ( ERR_FILE_IO_ERROR );
+    }
 
     return ( ERR_SUCCESS );
 }
