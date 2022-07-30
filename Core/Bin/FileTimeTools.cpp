@@ -219,6 +219,22 @@ showTimeInfo(
 }
 
 //----------------------------------------------------------------
+
+std::ostream  &
+showTimeStamp(
+        const  TimeStampInfo  & timeStamp,
+        std::ostream          & outStr)
+{
+    outStr  <<  "\tCreate:";
+    showTimeInfo(timeStamp.creationTime, outStr)
+            <<  std::endl   <<  "\tAccess:";
+    showTimeInfo(timeStamp.lastAccessTime, outStr)
+            <<  std::endl   <<  "\tWrite :";
+    showTimeInfo(timeStamp.lastWriteTime, outStr)
+            <<  std::endl;
+    return ( outStr );
+}
+
 //----------------------------------------------------------------
 /**   エントリポイント。
 **
@@ -273,7 +289,16 @@ int  main(int argc, char * argv[])
     std::cerr   <<  "Targets:"  <<  std::endl;
     for ( size_t i = 0; i < appOpts.targetFiles.size(); ++ i ) {
         const  std::string  & fnTarget  = appOpts.targetFiles[i];
+        std::cout   <<  "Setting time of "  <<  fnTarget
+                    <<  " to "  <<  std::endl;
+        showTimeStamp(timeStamp, std::cout);
         setTargetFileTime(fnTarget, timeStamp);
+
+        TimeStampInfo   updatedStamp;
+        getReferenceFileTime(fnTarget, updatedStamp);
+        std::cout   <<  "Checking time of " <<  fnTarget
+                    <<  std::endl;
+        showTimeStamp(updatedStamp, std::cout);
     }
 
     return ( 0 );
