@@ -171,8 +171,9 @@ getFileTimeFromString(
         }
         if ( ('0' <= c) && (c <= '9') ) {
             work[i] = c - '0';
+        } else {
+            return ( ERR_FAILURE );
         }
-        return ( ERR_FAILURE );
     }
 
     if ( (posSec != len) && (posSec != len - 3) ) {
