@@ -37,11 +37,32 @@ struct AppOpts {
     StringArray     targetFiles;
 };
 
-struct TimeStamps {
+struct TimeStampInfo {
     FILETIME    ftCreationTime;
     FILETIME    ftLastAccessTime;
     FILETIME    ftLastWriteTime;
 };
+
+
+//----------------------------------------------------------------
+/**   現在時刻を取得する。
+**
+**/
+
+ErrCode
+getCurrentTime(
+        TimeStampInfo   & timeStamp)
+{
+    SYSTEMTIME  localTime;
+
+    ::GetLocalTime(&localTime);
+
+    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftCreationTime));
+    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftLastAccessTime));
+    ::SystemTimeToFileTime(&localTime, &(timeStamp.ftLastWriteTime));
+
+    return ( ERR_SUCCESS );
+}
 
 //----------------------------------------------------------------
 /**   指定したファイルのタイムスタンプを取得する。
@@ -51,7 +72,7 @@ struct TimeStamps {
 ErrCode
 getReferenceFileTime(
         const std::string & fileName,
-        TimeStamps        & timeStamps)
+        TimeStampInfo     & timeStamp)
 {
     HANDLE  hFile;
 
@@ -66,9 +87,9 @@ getReferenceFileTime(
 
     if ( ! ::GetFileTime(
                     hFile,
-                    &(timeStamps.ftCreationTime),
-                    &(timeStamps.ftLastAccessTime),
-                    &(timeStamps.ftLastWriteTime))
+                    &(timeStamp.ftCreationTime),
+                    &(timeStamp.ftLastAccessTime),
+                    &(timeStamp.ftLastWriteTime))
     ) {
         return ( ERR_FILE_IO_ERROR );
     }
@@ -83,8 +104,8 @@ getReferenceFileTime(
 
 ErrCode
 setTargetFileTime(
-        const std::string & fileName,
-        const TimeStamps  & timeStamps)
+        const  std::string    & fileName,
+        const  TimeStampInfo  & timeStamp)
 {
     HANDLE  hFile;
 
@@ -100,9 +121,9 @@ setTargetFileTime(
 
     if ( ! ::SetFileTime(
                     hFile,
-                    &(timeStamps.ftCreationTime),
-                    &(timeStamps.ftLastAccessTime),
-                    &(timeStamps.ftLastWriteTime))
+                    &(timeStamp.ftCreationTime),
+                    &(timeStamp.ftLastAccessTime),
+                    &(timeStamp.ftLastWriteTime))
     ) {
         return ( ERR_FILE_IO_ERROR );
     }
@@ -151,11 +172,22 @@ int  main(int argc, char * argv[])
 
     std::cerr   <<  "Ref:"  <<  appOpts.refFile <<  std::endl;
     std::cerr   <<  "TS :"  <<  appOpts.tmStamp <<  std::endl;
-    std::cerr   <<  "Targets:";
-    for ( size_t i = 0; i < appOpts.targetFiles.size(); ++ i ) {
-        std::cerr   <<  appOpts.targetFiles[i]  <<  ",";
+
+    TimeStampInfo   timeStamp;
+
+    //  デフォルト値用にで現在時刻を取得しておく。  //
+    getCurrentTime(timeStamp);
+    if ( ! appOpts.refFile.empty() ) {
+        getReferenceFileTime(appOpts.refFile, timeStamp);
     }
-    std::cerr   <<  std::endl;
+
+    //  指定したファイル群のタイムスタンプを設定する。  //
+    std::cerr   <<  "Targets:"  <<  std::endl;
+    for ( size_t i = 0; i < appOpts.targetFiles.size(); ++ i ) {
+        const  std::string  & fnTarget  = appOpts.targetFiles[i];
+        std::cerr   <<  fnTarget    <<  std::endl;
+        setTargetFileTime(fnTarget, timeStamp);
+    }
 
     return ( 0 );
 }
