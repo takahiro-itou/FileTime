@@ -34,7 +34,16 @@ typedef     std::vector<std::string>    StringArray;
 struct AppOpts {
     std::string     refFile;
     std::string     tmStamp;
+    Boolean         overwriteCreation;
+
     StringArray     targetFiles;
+
+    AppOpts()
+        : refFile(),
+          tmStamp(),
+          overwriteCreation(BOOL_TRUE),
+          targetFiles()
+    { }
 };
 
 struct TimeInfo {
@@ -254,18 +263,22 @@ int  main(int argc, char * argv[])
 
     static struct option long_options[] = {
         { "reference", required_argument, 0, 'r' },
+        { "no-overwrite-creation", no_argument, 0, 'C' },
         { 0, 0, 0, 0 }
     };
 
     for (;;) {
         c = getopt_long(
-                argc, argv, "t:r:",
+                argc, argv, "Ct:r:",
                 long_options, &option_index);
         if ( c == -1 ) {
             break;
         }
 
         switch ( c ) {
+        case 'C':
+            appOpts.overwriteCreation = BOOL_FALSE;
+            break;
         case 'r':
             appOpts.refFile = std::string(optarg);
             break;
@@ -289,6 +302,12 @@ int  main(int argc, char * argv[])
     getCurrentTime(timeStamp);
     if ( ! appOpts.refFile.empty() ) {
         getReferenceFileTime(appOpts.refFile, timeStamp);
+        showTimeStamp(timeStamp, std::cerr);
+    }
+
+    //  作成日時を最終更新日時に設定する
+    if ( appOpts.overwriteCreation ) {
+        timeStamp.creationTime  = timeStamp.lastWriteTime;
     }
 
     //  指定したファイル群のタイムスタンプを設定する。  //
