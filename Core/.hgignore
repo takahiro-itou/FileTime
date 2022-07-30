@@ -13,6 +13,6 @@ Makefile\.in$
 ^autom4te\.cache\/
 ^configure$
 
-Tests/CMakeLists.txt
-Tests/Makefile.am
+Lib/.*/Tests/CMakeLists.txt
+Lib/.*/Tests/Makefile.am
 

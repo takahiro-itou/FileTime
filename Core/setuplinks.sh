@@ -1,4 +1,4 @@
-#! /usr/bin//env  bash  -x
+#! /usr/bin/env  bash  -x
 
 ##
 ##  コマンド定義。
@@ -42,3 +42,36 @@ fi
 ${RM_F}  .M4/InitAutoMake.m4
 ${LN_H}  .M4/InitAutoMake.${amtrgver}.m4  .M4/InitAutoMake.m4
 
+##
+##  定数宣言
+##
+
+testcommondir='.TestsConfig'
+
+##
+##
+##
+
+if [ ! -d  Lib/${testcommondir}/Tests ] ; then
+    mkdir  -p  Lib/${testcommondir}/Tests
+fi
+
+if [ -d  Lib/${testcommondir}/Tests ] ; then
+    (cd  Lib/${testcommondir}/Tests  \
+      &&  ${RM_F}  Makefile.am       \
+      &&  ${LN_H}  ../../Tests/.TestsCommon/Makefile.am)
+    (cd  Lib/${testcommondir}/Tests  \
+      &&  ${RM_F}  CMakeLists.txt    \
+      &&  ${LN_H}  ../../Tests/.TestsCommon/CMakeLists.txt)
+fi
+
+for  dir  in  Common  ; do
+    if [ -d Lib/${dir}/Tests ] ; then
+        (cd  Lib/${dir}/Tests          \
+          &&  ${RM_F}  Makefile.am     \
+          &&  ${LN_H}  ../../${testcommondir}/Tests/Makefile.am)
+        (cd  Lib/${dir}/Tests          \
+          &&  ${RM_F}  CMakeLists.txt  \
+          &&  ${LN_H}  ../../${testcommondir}/Tests/CMakeLists.txt)
+    fi
+done
