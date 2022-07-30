@@ -109,6 +109,7 @@ getReferenceFileTime(
         const std::string & fileName,
         TimeStampInfo     & timeStamp)
 {
+    BOOL    ret;
     HANDLE  hFile;
 
     hFile = ::CreateFile(
@@ -120,12 +121,14 @@ getReferenceFileTime(
         return ( ERR_FILE_OPEN_ERROR );
     }
 
-    if ( ! ::GetFileTime(
-                    hFile,
-                    &(timeStamp.creationTime.utcFile),
-                    &(timeStamp.lastAccessTime.utcFile),
-                    &(timeStamp.lastWriteTime.utcFile))
-    ) {
+    ret = ::GetFileTime(
+                hFile,
+                &(timeStamp.creationTime.utcFile),
+                &(timeStamp.lastAccessTime.utcFile),
+                &(timeStamp.lastWriteTime.utcFile));
+    ::CloseHandle(hFile);
+
+    if ( ! ret ) {
         return ( ERR_FILE_IO_ERROR );
     }
 
@@ -147,6 +150,7 @@ setTargetFileTime(
         const  std::string    & fileName,
         const  TimeStampInfo  & timeStamp)
 {
+    BOOL    ret;
     HANDLE  hFile;
 
     hFile = ::CreateFile(
@@ -159,12 +163,14 @@ setTargetFileTime(
         return ( ERR_FILE_OPEN_ERROR );
     }
 
-    if ( ! ::SetFileTime(
-                    hFile,
-                    &(timeStamp.creationTime.utcFile),
-                    &(timeStamp.lastAccessTime.utcFile),
-                    &(timeStamp.lastWriteTime.utcFile))
-    ) {
+    ret = ::SetFileTime(
+                hFile,
+                &(timeStamp.creationTime.utcFile),
+                &(timeStamp.lastAccessTime.utcFile),
+                &(timeStamp.lastWriteTime.utcFile));
+    ::CloseHandle(hFile);
+
+    if ( ! ret ) {
         return ( ERR_FILE_IO_ERROR );
     }
 
