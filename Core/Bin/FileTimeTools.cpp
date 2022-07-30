@@ -231,11 +231,11 @@ showTimeStamp(
         const  TimeStampInfo  & timeStamp,
         std::ostream          & outStr)
 {
-    outStr  <<  "\tCreate:";
+    outStr  <<  " - Create: ";
     showTimeInfo(timeStamp.creationTime, outStr)
-            <<  std::endl   <<  "\tAccess:";
+            <<  std::endl   <<  " - Access: ";
     showTimeInfo(timeStamp.lastAccessTime, outStr)
-            <<  std::endl   <<  "\tWrite :";
+            <<  std::endl   <<  " - Write : ";
     showTimeInfo(timeStamp.lastWriteTime, outStr)
             <<  std::endl;
     return ( outStr );
