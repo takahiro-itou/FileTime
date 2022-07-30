@@ -417,10 +417,14 @@ int  main(int argc, char * argv[])
     std::cerr   <<  "Targets:"  <<  std::endl;
     for ( size_t i = 0; i < appOpts.targetFiles.size(); ++ i ) {
         const  std::string  & fnTarget  = appOpts.targetFiles[i];
-        std::cout   <<  "Setting time of "  <<  fnTarget
+        std::cout   <<  "\nNow setting time of "
+                    <<  fnTarget
                     <<  " to "  <<  std::endl;
         showTimeStamp(timeStamp, std::cout);
-        setTargetFileTime(fnTarget, timeStamp, appOpts);
+        retErr  = setTargetFileTime(fnTarget, timeStamp, appOpts);
+        if ( retErr != ERR_SUCCESS ) {
+            continue;
+        }
 
         TimeStampInfo   updatedStamp;
         getReferenceFileTime(fnTarget, updatedStamp);
