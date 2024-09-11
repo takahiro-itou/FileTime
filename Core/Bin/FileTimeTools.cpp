@@ -3,7 +3,7 @@
 **                                                                      **
 **                      ---  File Time Tools.  ---                      **
 **                                                                      **
-**          Copyright (C), 2020-2022, Takahiro Itou                     **
+**          Copyright (C), 2020-2024, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 **          License: (See COPYING and LICENSE files)                    **
@@ -292,7 +292,7 @@ showTimeInfo(
 
     snprintf(
             buf, sizeof(buf),
-            "%04d/%02d/%02d (%s) %02d:%02d:%02d.%d [%08x%08x]",
+            "%04d/%02d/%02d (%s) %02d:%02d:%02d.%d [%08lx%08x]",
             lpSystemTime->wYear,
             lpSystemTime->wMonth,
             lpSystemTime->wDay,
