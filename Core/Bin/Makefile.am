@@ -45,5 +45,5 @@ dist_noinst_DATA        =  \
 ##
 
 FileTimeTools_SOURCES   =  FileTimeTools.cpp
-FileTimeTools_LDADD     =  -lftCommon
+FileTimeTools_LDADD     =
 
