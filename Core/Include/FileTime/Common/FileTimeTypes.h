@@ -23,6 +23,7 @@
 
 #include    "FileTimeSettings.h"
 
+#include    <cstdint>
 #include    <stddef.h>
 
 
