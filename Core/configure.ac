@@ -47,15 +47,15 @@ dnl
 
 myac_build_type=${AUTOMAKE_BUILD_TYPE:-'Debug'}
 
-myac_cxx_warning_flags='-Weffc++'
-myac_c_warning_flags=''
+myac_cxx_warning_flags='-Wall -Weffc++'
+myac_c_warning_flags=' -Wall'
 
 : ${CFLAGS:='-O0  -g  -D_DEBUG'}
 : ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
 
 m4_include([.M4/CheckExtraFlags.m4])
 
-EXTRA_COMPILER_OPTIONS="-std=c++11  -Wall"
+EXTRA_COMPILER_OPTIONS="-std=c++11"
 CFLAGS="${CFLAGS}  ${EXTRA_COMPILER_OPTIONS}  ${myac_c_warning_flags}"
 CXXFLAGS="${CXXFLAGS}  ${EXTRA_COMPILER_OPTIONS}  ${myac_cxx_warning_flags}"
 
