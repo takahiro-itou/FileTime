@@ -56,12 +56,8 @@ myac_saved_CFLAGS=${CFLAGS:-''}
 : ${CFLAGS:='-O0  -g  -D_DEBUG'}
 : ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
 
-m4_include([.M4/CheckExtraFlags.m4])
-
-EXTRA_COMPILER_OPTIONS="-std=c++11"
-
-CXXFLAGS="${CXXFLAGS}  ${EXTRA_COMPILER_OPTIONS}  ${myac_cxx_warning_flags}"
-CFLAGS="${CFLAGS}  ${EXTRA_COMPILER_OPTIONS}  ${myac_c_warning_flags}"
+CXXFLAGS="${CXXFLAGS} ${myac_cxx_warning_flags}"
+CFLAGS="${CFLAGS} ${myac_c_warning_flags}"
 
 dnl
 dnl   Project Name Space.
@@ -111,6 +107,10 @@ dnl
 dnl
 dnl   Check Extra Compiler/Linker Options.
 dnl
+
+m4_include([.M4/CheckExtraFlags.m4])
+
+m4_include([.M4/EnableCxx11.m4])
 
 dnl----------------------------------------------------------------
 dnl
