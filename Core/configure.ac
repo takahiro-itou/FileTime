@@ -50,6 +50,9 @@ myac_build_type=${AUTOMAKE_BUILD_TYPE:-'Debug'}
 myac_cxx_warning_flags='-Wall -Weffc++'
 myac_c_warning_flags='-Wall'
 
+myac_saved_CXXFLAGS=${CXXFLAGS:-''}
+myac_saved_CFLAGS=${CFLAGS:-''}
+
 : ${CFLAGS:='-O0  -g  -D_DEBUG'}
 : ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
 
