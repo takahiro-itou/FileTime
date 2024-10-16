@@ -50,14 +50,17 @@ myac_build_type=${AUTOMAKE_BUILD_TYPE:-'Debug'}
 myac_cxx_warning_flags='-Wall -Weffc++'
 myac_c_warning_flags='-Wall'
 
+myac_cxxflags_debug='-O0 -g -D_DEBUG'
+myac_cflags_debug='-O0 -g -D_DEBUG'
+
 myac_saved_CXXFLAGS=${CXXFLAGS:-''}
 myac_saved_CFLAGS=${CFLAGS:-''}
 
-: ${CFLAGS:='-O0  -g  -D_DEBUG'}
-: ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
+myac_cxxflags="${myac_cxxflags_debug}   ${myac_saved_CXXFLAGS}"
+myac_cflags="${myac_cflags_debug}   ${myac_saved_CFLAGS}"
 
-CXXFLAGS="${CXXFLAGS} ${myac_cxx_warning_flags}"
-CFLAGS="${CFLAGS} ${myac_c_warning_flags}"
+CXXFLAGS="${myac_cxxflags} ${myac_cxx_warning_flags}"
+CFLAGS="${myac_cflags} ${myac_c_warning_flags}"
 
 dnl
 dnl   Project Name Space.
