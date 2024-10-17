@@ -53,6 +53,9 @@ myac_c_warning_flags='-Wall'
 myac_cxxflags_debug='-O0 -g -D_DEBUG'
 myac_cflags_debug='-O0 -g -D_DEBUG'
 
+myac_cxxflags_release='-O3 -g -DNDEBUG'
+myac_cflags_release='-O3 -g -DNDEBUG'
+
 myac_saved_CXXFLAGS=${CXXFLAGS:-''}
 myac_saved_CFLAGS=${CFLAGS:-''}
 
