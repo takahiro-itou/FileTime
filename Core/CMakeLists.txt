@@ -9,16 +9,16 @@
 ##    要求するツールのバージョンを指定する。
 ##
 
-CMake_Minimum_Required (VERSION  3.0.2)
+cmake_minimum_required(VERSION  3.0.2)
 
 ##
 ##    パッケージの情報を指定する。
 ##
 
-Set     (PROJECT_NAME      FileTime)
-Set     (serial            "0.0.0")
+set(PROJECT_NAME        FileTime)
+set(serial              "0.0.0")
 
-Project (${PROJECT_NAME}   VERSION  1.0.0)
+project(${PROJECT_NAME}     VERSION  1.0.0)
 
 ##----------------------------------------------------------------
 ##
@@ -103,4 +103,3 @@ Install (FILES  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
 
 Add_SubDirectory (Lib)
 Add_SubDirectory (Bin)
-
