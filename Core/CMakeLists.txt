@@ -25,7 +25,7 @@ project(${PROJECT_NAME}     VERSION  1.0.0)
 ##    プロジェクトの基本設定。
 ##
 
-Enable_Testing ()
+enable_testing()
 
 Set (COMMON_CMAKE_DIR      "${PROJECT_SOURCE_DIR}/.CMake")
 Set (INCTOP_DIR_NAME       "Include")
