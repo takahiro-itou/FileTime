@@ -50,15 +50,15 @@ set(INCLUDE_BINARY_DIR      "${INCTOP_BINARY_DIR}/${INCPKG_DIR_NAME}")
 ##    Project Name Space.
 ##
 
-Set (FILETIME_CNF_NAMESPACE     FileTime)
+set(FILETIME_CNF_NAMESPACE      FileTime)
 
 ##----------------------------------------------------------------
 ##
 ##    インクルードパスの設定。
 ##
 
-Include_Directories ("${PROJECT_SOURCE_DIR}/Include")
-Include_Directories ("${PROJECT_BINARY_DIR}/Include")
+include_directories("${PROJECT_SOURCE_DIR}/Include")
+include_directories("${PROJECT_BINARY_DIR}/Include")
 
 ##----------------------------------------------------------------
 ##
@@ -71,12 +71,12 @@ Include_Directories ("${PROJECT_BINARY_DIR}/Include")
 ##    設定を書き込んだファイルを生成。
 ##
 
-Configure_File (
+configure_file(
     "${INCLUDE_SOURCE_DIR}/.Config/ConfiguredFileTime.h.in"
     "${INCLUDE_BINARY_DIR}/.Config/ConfiguredFileTime.h"
 )
 
-Configure_File (
+configure_file(
     "${INCLUDE_SOURCE_DIR}/.Config/Config.h.cmake.in"
     "${INCLUDE_BINARY_DIR}/.Config/.${PROJECT_NAME}.Config.h"
 )
@@ -86,13 +86,13 @@ Configure_File (
 ##    パッケージコンフィグレーション。
 ##
 
-Configure_File (
+configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     @ONLY
 )
 
-Install (FILES  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+install(FILES   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         DESTINATION  .
 )
 
