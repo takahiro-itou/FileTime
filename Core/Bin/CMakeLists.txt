@@ -1,3 +1,2 @@
 
-Add_Executable (FileTimeTools   FileTimeTools.cpp)
-
+add_executable(FileTimeTools    FileTimeTools.cpp)
