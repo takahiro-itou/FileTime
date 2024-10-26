@@ -4,7 +4,7 @@
 ##    プロジェクトの基本設定。
 ##
 
-Set (LIBRARIES_TARGET_PREFIX)
+set(LIBRARIES_TARGET_PREFIX)
 
 ##----------------------------------------------------------------
 ##
