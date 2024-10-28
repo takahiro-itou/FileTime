@@ -75,6 +75,8 @@ set(LIBRARIES_TARGET_PREFIX)
 ##    ビルド環境の検査。
 ##
 
+Include (${COMMON_CMAKE_DIR}/EnableCxx11.cmake)
+
 ##
 ##    Project Name Space.
 ##
