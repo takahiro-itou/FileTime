@@ -82,6 +82,12 @@ set(INCLUDE_BINARY_DIR      "${INCTOP_BINARY_DIR}/${INCPKG_DIR_NAME}")
 
 set(LIBRARIES_TARGET_PREFIX)
 
+##
+##    Project Name Space.
+##
+
+set(FILETIME_CNF_NAMESPACE      FileTime)
+
 ##----------------------------------------------------------------
 ##
 ##    ビルド環境の検査。
@@ -90,13 +96,6 @@ set(LIBRARIES_TARGET_PREFIX)
 Include (${COMMON_CMAKE_DIR}/EnableCxx11.cmake)
 
 Include (${COMMON_CMAKE_DIR}/CheckConstExpr.cmake)
-
-
-##
-##    Project Name Space.
-##
-
-set(FILETIME_CNF_NAMESPACE      FileTime)
 
 ##----------------------------------------------------------------
 ##
