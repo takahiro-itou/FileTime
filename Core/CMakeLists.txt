@@ -77,6 +77,8 @@ set(LIBRARIES_TARGET_PREFIX)
 
 Include (${COMMON_CMAKE_DIR}/EnableCxx11.cmake)
 
+Include (${COMMON_CMAKE_DIR}/CheckConstExpr.cmake)
+
 ##
 ##    Project Name Space.
 ##
