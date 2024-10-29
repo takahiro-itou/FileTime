@@ -43,6 +43,14 @@ set(CMAKE_C_FLAGS_DEBUG         "${CMAKE_C_FLAGS_DEBUG}   -D_DEBUG")
 # set(CMAKE_CXX_FLAGS_RELEASE     "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 # set(CMAKE_C_FLAGS_RELEASE       "${CMAKE_C_FLAGS_RELEASE}   -DNDEBUG")
 
+If (UNIX)
+    set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DUNIX=1")
+    set(CMAKE_C_FLAGS       "${CMAKE_C_FLAGS}   -DUNIX=1")
+ElseIf (Win32)
+    set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DWIN32=1")
+    set(CMAKE_C_FLAGS       "${CMAKE_C_FLAGS}   -DWIN32=1")
+EndIf ()
+
 ##----------------------------------------------------------------
 ##
 ##    プロジェクトの基本設定。
@@ -78,14 +86,6 @@ set(LIBRARIES_TARGET_PREFIX)
 Include (${COMMON_CMAKE_DIR}/EnableCxx11.cmake)
 
 Include (${COMMON_CMAKE_DIR}/CheckConstExpr.cmake)
-
-If (UNIX)
-    set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DUNIX=1")
-    set(CMAKE_C_FLAGS       "${CMAKE_C_FLAGS}   -DUNIX=1")
-ElseIf (Win32)
-    set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -DWIN32=1")
-    set(CMAKE_C_FLAGS       "${CMAKE_C_FLAGS}   -DWIN32=1")
-EndIf ()
 
 
 ##
