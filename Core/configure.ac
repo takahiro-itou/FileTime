@@ -78,7 +78,6 @@ else
     myac_cflags="${myac_cflags_release} ${myac_saved_CFLAGS}"
 fi
 
-
 dnl
 dnl   Check Target System.
 dnl
@@ -100,14 +99,12 @@ AM_CONDITIONAL([AMCNF_LINUX], [["X${myac_target_os}Y" = 'XlinuxY']])
 myac_cxxflags="${myac_cxxflags} ${myac_cppflags_os}"
 myac_cflags="${myac_cflags} ${myac_cppflags_os}"
 
-
 dnl
 dnl   Set Build Options.
 dnl
 
 CXXFLAGS="${myac_cxxflags} ${myac_cxx_warning_flags}"
 CFLAGS="${myac_cflags} ${myac_c_warning_flags}"
-
 
 dnl
 dnl   Project Name Space.
