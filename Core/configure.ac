@@ -84,10 +84,10 @@ dnl
 
 if test "X${target_os}Y" = "XcygwinY" ; then
     myac_target_os='win32'
-    myac_cppflags_os='-DWIN32=1 -DWIN32_CYGWIN=1'
+    myac_cppflags_os='-DWIN32=1'
 elif test "X${target_os:0:5}Y" = "XmingwY" ; then
     myac_target_os='win32'
-    myac_cppflags_os='-DWIN32=1 -DWIN32_MINGW=1'
+    myac_cppflags_os='-DWIN32=1'
 else
     myac_target_os='linux'
     myac_cppflags_os='-DUNIX=1'
