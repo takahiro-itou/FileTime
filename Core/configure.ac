@@ -28,6 +28,17 @@ dnl
 AC_CONFIG_AUX_DIR([.Config])
 
 dnl
+dnl   ターゲットシステムを判定
+dnl
+
+AC_CANONICAL_TARGET
+AC_MSG_CHECKING([for canonical target])
+AC_MSG_RESULT(["${target}"])
+AC_MSG_RESULT([target_cpu=${target_cpu}])
+AC_MSG_RESULT([target_vendor=${target_vendor}])
+AC_MSG_RESULT([target_os=${target_os}])
+
+dnl
 dnl   適当なバージョンの automake を設定
 dnl
 
@@ -66,6 +77,31 @@ else
     myac_cxxflags="${myac_cxxflags_release} ${myac_saved_CXXFLAGS}"
     myac_cflags="${myac_cflags_release} ${myac_saved_CFLAGS}"
 fi
+
+dnl
+dnl   Check Target System.
+dnl
+
+if test "X${target_os}Y" = "XcygwinY" ; then
+    myac_target_os='win32'
+    myac_cppflags_os='-DWIN32=1'
+elif test "X${target_os:0:5}Y" = "XmingwY" ; then
+    myac_target_os='win32'
+    myac_cppflags_os='-DWIN32=1'
+else
+    myac_target_os='linux'
+    myac_cppflags_os='-DUNIX=1'
+fi
+
+AM_CONDITIONAL([AMCNF_WIN32], [["X${myac_target_os}Y" = 'Xwin32Y']])
+AM_CONDITIONAL([AMCNF_LINUX], [["X${myac_target_os}Y" = 'XlinuxY']])
+
+myac_cxxflags="${myac_cxxflags} ${myac_cppflags_os}"
+myac_cflags="${myac_cflags} ${myac_cppflags_os}"
+
+dnl
+dnl   Set Build Options.
+dnl
 
 CXXFLAGS="${myac_cxxflags} ${myac_cxx_warning_flags}"
 CFLAGS="${myac_cflags} ${myac_c_warning_flags}"
