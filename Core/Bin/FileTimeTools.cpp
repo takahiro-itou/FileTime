@@ -26,7 +26,9 @@
 #include    <string>
 #include    <vector>
 
-#include    <windows.h>
+#if defined( WIN32 )
+#    include    <windows.h>
+#endif
 
 using   namespace   FILETIME_NAMESPACE;
 
