@@ -72,8 +72,8 @@ AM_CPPFLAGS         =  \
         ${TEST_CPPFLAGS_COMMON}     \
         ${TEST_CPPFLAGS_XUNIT}
 
-AM_CFLAGS           =  ${TEST_CPPFLAGS_XUNIT}
-AM_CXXFLAGS         =  ${TEST_CPPFLAGS_XUNIT}
+AM_CFLAGS           =  ${TEST_CFLAGS_XUNIT}
+AM_CXXFLAGS         =  ${TEST_CXXFLAGS_XUNIT}
 AM_LDFLAGS          =  \
         -L${LIBTOP_BINARY_DIR}  \
         ${TEST_LDFLAGS_COMMON}  \
