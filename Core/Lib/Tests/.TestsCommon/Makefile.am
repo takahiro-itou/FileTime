@@ -7,8 +7,6 @@
 ##    List of Directories.
 ##
 
-MODULE_DIR_NAME         =  Common
-
 include  $(top_srcdir)/.M4/Makefile.DirList.inc
 
 DRIVER_SOURCE_DIR       =  ${LIBTOP_SOURCE_DIR}/Tests
