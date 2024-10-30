@@ -93,8 +93,8 @@ else
     myac_cppflags_os='-DUNIX=1'
 fi
 
-AM_CONDITIONAL([AMCNF_WIN32], [["X${myac_target_os}Y" = 'Xwin32Y']])
-AM_CONDITIONAL([AMCNF_LINUX], [["X${myac_target_os}Y" = 'XlinuxY']])
+AM_CONDITIONAL([AMCNF_WIN32], [[test "X${myac_target_os}Y" = 'Xwin32Y']])
+AM_CONDITIONAL([AMCNF_LINUX], [[test "X${myac_target_os}Y" = 'XlinuxY']])
 
 myac_cxxflags="${myac_cxxflags} ${myac_cppflags_os}"
 myac_cflags="${myac_cflags} ${myac_cppflags_os}"
