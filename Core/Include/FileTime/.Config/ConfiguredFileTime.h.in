@@ -68,4 +68,17 @@
 #    endif
 #endif
 
+//
+//    キーワード nullptr  の検査。
+//
+
+#if ( @CONFIG_CHECK_CXX_NULLPTR_ENABLED@ )
+#    define     FILETIME_CORE_ENABLE_NULLPTR        1
+#else
+#    if !defined( nullptr )
+#        define     nullptr     NULL
+#    endif
+#    undef      FILETIME_CORE_ENABLE_NULLPTR
+#endif
+
 #endif
