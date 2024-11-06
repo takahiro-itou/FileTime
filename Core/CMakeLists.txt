@@ -96,6 +96,7 @@ set(FILETIME_CNF_NAMESPACE      FileTime)
 Include (${COMMON_CMAKE_DIR}/EnableCxx11.cmake)
 
 Include (${COMMON_CMAKE_DIR}/CheckConstExpr.cmake)
+Include (${COMMON_CMAKE_DIR}/CheckNullPtr.cmake)
 
 ##----------------------------------------------------------------
 ##
