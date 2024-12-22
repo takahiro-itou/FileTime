@@ -28,6 +28,12 @@ dnl
 AC_CONFIG_AUX_DIR([.Config])
 
 dnl
+dnl   ターゲットシステムを判定
+dnl
+
+m4_include([.M4/CheckTargetSystem.m4])
+
+dnl
 dnl   適当なバージョンの automake を設定
 dnl
 
@@ -39,20 +45,47 @@ dnl   プロジェクトの基本設定。
 dnl
 
 AC_CONFIG_SRCDIR([Makefile.am])
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 
 dnl
 dnl   デフォルトのコンパイルオプション
 dnl
 
-: ${CFLAGS:='-O0  -g  -D_DEBUG'}
-: ${CXXFLAGS:='-O0  -g  -D_DEBUG'}
+myac_build_type=${AUTOMAKE_BUILD_TYPE:-'Debug'}
 
-m4_include([.M4/CheckExtraFlags.m4])
+myac_cxx_warning_flags='-Wall -Weffc++'
+myac_c_warning_flags='-Wall'
 
-EXTRA_COMPILER_OPTIONS="-std=c++11  -Wall"
-CFLAGS="${CFLAGS}  ${EXTRA_COMPILER_OPTIONS}"
-CXXFLAGS="${CXXFLAGS}  ${EXTRA_COMPILER_OPTIONS}  -Weffc++"
+myac_cxxflags_debug='-O0 -g -D_DEBUG'
+myac_cflags_debug='-O0 -g -D_DEBUG'
+
+myac_cxxflags_release='-O3 -g -DNDEBUG'
+myac_cflags_release='-O3 -g -DNDEBUG'
+
+myac_saved_CXXFLAGS=${CXXFLAGS:-''}
+myac_saved_CFLAGS=${CFLAGS:-''}
+
+if test "X${myac_build_type}Y" = "XDebugY" ; then
+    myac_cxxflags="${myac_cxxflags_debug}   ${myac_saved_CXXFLAGS}"
+    myac_cflags="${myac_cflags_debug}   ${myac_saved_CFLAGS}"
+else
+    myac_cxxflags="${myac_cxxflags_release} ${myac_saved_CXXFLAGS}"
+    myac_cflags="${myac_cflags_release} ${myac_saved_CFLAGS}"
+fi
+
+dnl
+dnl   PreProcess Flags for Target OS.
+dnl
+
+myac_cxxflags="${myac_cxxflags} ${myac_cppflags_os}"
+myac_cflags="${myac_cflags} ${myac_cppflags_os}"
+
+dnl
+dnl   Set Build Options.
+dnl
+
+CXXFLAGS="${myac_cxxflags} ${myac_cxx_warning_flags}"
+CFLAGS="${myac_cflags} ${myac_c_warning_flags}"
 
 dnl
 dnl   Project Name Space.
@@ -103,17 +136,22 @@ dnl
 dnl   Check Extra Compiler/Linker Options.
 dnl
 
+m4_include([.M4/CheckExtraFlags.m4])
+
+m4_include([.M4/EnableCxx11.m4])
+
+m4_include([.M4/CheckConstExpr.m4])
+m4_include([.M4/CheckNullPtr.m4])
+
 dnl----------------------------------------------------------------
 dnl
 dnl   Additional Packages.
 dnl   外部パッケージの追加
 dnl
 
-m4_include([.M4/WithExtLibs.m4])
+m4_include([.M4/WithExtPkgs.m4])
 
-MYAC_WITH_EXT_LIB(
-    [CPPUNIT],  [cppunit],  [Path to cppunit],  [yes],
-    [AMCNF_CPPUNIT_ENABLED])
+m4_include([.M4/Packages/CppUnit.m4])
 
 dnl----------------------------------------------------------------
 dnl
@@ -121,7 +159,7 @@ dnl   Linker Scripts.
 dnl   リンカスクリプトを生成する。
 dnl
 
-m4_include([.M4/LinkerScripts.m4])
+m4_include([Lib/.LinkerScript/LinkerScripts.m4])
 
 dnl----------------------------------------------------------------
 dnl
@@ -135,6 +173,7 @@ dnl
 
 AC_CONFIG_FILES([
     .CMake/Makefile
+    .CMake/Modules/Makefile
     .M4/Makefile
     Makefile
     Bin/Makefile

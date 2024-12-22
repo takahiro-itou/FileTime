@@ -26,7 +26,9 @@
 #include    <string>
 #include    <vector>
 
-#include    <windows.h>
+#if defined( WIN32 )
+#    include    <windows.h>
+#endif
 
 using   namespace   FILETIME_NAMESPACE;
 
@@ -410,7 +412,7 @@ int  main(int argc, char * argv[])
     } else {
         timeStamp.creationTime.utcFile.dwLowDateTime    = 0;
         timeStamp.creationTime.utcFile.dwHighDateTime   = 0;
-        fillTimeInfoFromLocalSystemTime(timeStamp.creationTime);
+        fillTimeInfoFromUtcFileTime(timeStamp.creationTime);
     }
 
     //  指定したファイル群のタイムスタンプを設定する。  //

@@ -34,8 +34,10 @@ AM_LDFLAGS              =  -L${LIBTOP_BINARY_DIR}
 ##    List of Installs.
 ##
 
+if  AMCNF_WIN32
 bin_PROGRAMS            =  \
         FileTimeTools
+endif
 
 dist_noinst_DATA        =  \
         CMakeLists.txt
